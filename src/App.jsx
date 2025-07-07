@@ -1,13 +1,14 @@
-import { useState } from 'react'
+import { useState } from 'react';
+import Background from './components/Background';
 
-import './App.css'
 
 function App() {
 
   return (
     <>
-      <div className='w-screen h-screen bg-zinc-800'>
-           
+      <div className='relative w-full h-screen bg-zinc-800'>
+           <Background/>
+           <div className=''></div>
       </div>
     </>
   )
