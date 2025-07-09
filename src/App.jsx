@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Background from './components/Background';
-
+import Foreground from './components/Foreground';
 
 function App() {
 
@@ -8,7 +8,7 @@ function App() {
     <>
       <div className='relative w-full h-screen bg-zinc-800'>
            <Background/>
-           <div className=''></div>
+           <Foreground/>
       </div>
     </>
   )
