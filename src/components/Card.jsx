@@ -4,6 +4,7 @@ import { LuDownload } from "react-icons/lu";
 import { IoIosClose } from "react-icons/io";
 import { motion } from "framer-motion";
 
+
 function Card({ data, reference, onDelete }) {
   return (
     <motion.div
@@ -11,41 +12,52 @@ function Card({ data, reference, onDelete }) {
       dragConstraints={reference}
       whileDrag={{ scale: 1.1 }}
       dragElastic={0.1}
-      className="relative flex-shrink-0 w-60 h-72 rounded-[40px] bg-zinc-900/90 text-white px-8 py-10 overflow-hidden"
+      className="relative flex-shrink-0 w-60 h-72 rounded-[20px] bg-zinc-800/90 text-white p-6 overflow-hidden shadow-lg"
     >
       {/* Delete Button */}
       <button
         onClick={onDelete}
-        className="absolute top-2 right-2 text-red-400 hover:text-red-600 text-lg z-10"
+        className="absolute top-2 right-2 text-red-400 hover:text-red-600 text-xl z-10 w-6 h-6 flex items-center justify-center"
       >
-        <IoIosClose />
+        ✕
       </button>
 
-      <FaRegFileAlt className="text-xl" />
+      {/* Note Icon */}
+      <div className="text-xl mb-4">📝</div>
 
-      <p className="text-sm mt-5 font-semibold leading-[1.25]">
-        {data.description}
+      {/* Note Title */}
+      <h3 className="text-lg font-bold mb-3 line-clamp-2">
+        {data.title}
+      </h3>
+
+      {/* Note Content */}
+      <p className="text-sm text-zinc-300 leading-relaxed mb-4 line-clamp-4">
+        {data.content}
       </p>
 
-      <div className="footer absolute bottom-0 w-full left-0">
-        <div className="flex items-center justify-between py-3 px-8 mb-3">
-          <h5>{data.filesize}</h5>
-          <span className="w-7 h-7 bg-zinc-600 rounded-full flex items-center justify-center">
-            {data.close ? <IoIosClose /> : <LuDownload size=".7em" color="#fff" />}
-          </span>
+      {/* Footer */}
+      <div className="absolute bottom-0 left-0 w-full">
+        {/* Date */}
+        <div className="px-6 py-2">
+          <p className="text-xs text-zinc-400">{data.date}</p>
         </div>
 
-        {data.tag.isOpen && (
+        {/* Category Tag */}
+        {data.category && (
           <div
-            className={`tag w-full py-4 ${
-              data.tag.tagColor === "blue"
+            className={`w-full py-3 flex items-center justify-center ${
+              data.categoryColor === "blue"
                 ? "bg-blue-600"
-                : data.tag.tagColor === "red"
+                : data.categoryColor === "red"
                 ? "bg-red-600"
-                : "bg-green-600"
-            } flex items-center justify-center`}
+                : data.categoryColor === "green"
+                ? "bg-green-600"
+                : data.categoryColor === "purple"
+                ? "bg-purple-600"
+                : "bg-amber-600"
+            }`}
           >
-            <h3 className="text-sm font-semibold">{data.tag.tagTitle}</h3>
+            <h4 className="text-sm font-semibold">{data.category}</h4>
           </div>
         )}
       </div>

@@ -1,12 +1,13 @@
 // Modal.jsx
 import React, { useState } from 'react';
 
+
 function Modal({ setData, closeModal }) {
   const [form, setForm] = useState({
-    description: '',
-    filesize: '',
-    tagTitle: '',
-    tagColor: ''
+    title: '',
+    content: '',
+    category: '',
+    categoryColor: 'blue'
   });
 
   const handleChange = (e) => {
@@ -14,77 +15,86 @@ function Modal({ setData, closeModal }) {
     setForm(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = () => {
+    if (!form.title.trim() || !form.content.trim()) {
+      alert('Please fill in both title and content');
+      return;
+    }
 
-    const newCard = {
+    const newNote = {
       id: crypto.randomUUID(),
-      description: form.description,
-      filesize: form.filesize,
-      close: true,
-      tag: {
-        isOpen: true,
-        tagTitle: form.tagTitle,
-        tagColor: form.tagColor
-      }
+      title: form.title,
+      content: form.content,
+      category: form.category,
+      categoryColor: form.categoryColor,
+      date: new Date().toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric' 
+      })
     };
 
-    setData(prev => [...prev, newCard]);
+    setData(prev => [...prev, newNote]);
     closeModal();
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-zinc-800 text-white rounded-xl shadow-xl p-6 w-full max-w-md space-y-4"
-    >
-      <h2 className="text-xl font-bold">Add New Card</h2>
+    <div className="bg-zinc-800 text-white rounded-xl shadow-xl p-6 w-full max-w-md space-y-4 z-[4]">
+      <h2 className="text-xl font-bold">Create New Note</h2>
 
       <input
-        name="description"
-        value={form.description}
+        name="title"
+        value={form.title}
         onChange={handleChange}
-        placeholder="Description"
-        className="w-full p-2 rounded bg-zinc-700 border border-zinc-600 focus:outline-none"
+        placeholder="Note Title"
+        className="w-full p-3 rounded bg-zinc-700 border border-zinc-600 focus:outline-none focus:border-amber-500"
       />
+
+      <textarea
+        name="content"
+        value={form.content}
+        onChange={handleChange}
+        placeholder="Write your note here..."
+        rows="4"
+        className="w-full p-3 rounded bg-zinc-700 border border-zinc-600 focus:outline-none focus:border-amber-500 resize-none"
+      />
+
       <input
-        name="filesize"
-        value={form.filesize}
+        name="category"
+        value={form.category}
         onChange={handleChange}
-        placeholder="File Size"
-        className="w-full p-2 rounded bg-zinc-700 border border-zinc-600 focus:outline-none"
+        placeholder="Category (optional)"
+        className="w-full p-3 rounded bg-zinc-700 border border-zinc-600 focus:outline-none focus:border-amber-500"
       />
-      <input
-        name="tagTitle"
-        value={form.tagTitle}
+
+      <select
+        name="categoryColor"
+        value={form.categoryColor}
         onChange={handleChange}
-        placeholder="Tag Title"
-        className="w-full p-2 rounded bg-zinc-700 border border-zinc-600 focus:outline-none"
-      />
-      <input
-        name="tagColor"
-        value={form.tagColor}
-        onChange={handleChange}
-        placeholder="Tag Color (e.g. red, green, blue)"
-        className="w-full p-2 rounded bg-zinc-700 border border-zinc-600 focus:outline-none"
-      />
+        className="w-full p-3 rounded bg-zinc-700 border border-zinc-600 focus:outline-none focus:border-amber-500"
+      >
+        <option value="blue">Blue</option>
+        <option value="red">Red</option>
+        <option value="green">Green</option>
+        <option value="purple">Purple</option>
+        <option value="amber">Amber</option>
+      </select>
 
       <div className="flex justify-end gap-3">
         <button
-          type="button"
           onClick={closeModal}
-          className="bg-zinc-600 text-white px-4 py-2 rounded hover:bg-zinc-500"
+          className="bg-zinc-600 text-white px-4 py-2 rounded hover:bg-zinc-500 transition-colors"
         >
           Cancel
         </button>
         <button
-          type="submit"
-          className="bg-amber-600 text-white px-4 py-2 rounded hover:bg-amber-500"
+          onClick={handleSubmit}
+          className="bg-amber-600 text-white px-4 py-2 rounded hover:bg-amber-500 transition-colors"
         >
-          Add Card
+          Create Note
         </button>
       </div>
-    </form>
+    </div>
   );
 }
 

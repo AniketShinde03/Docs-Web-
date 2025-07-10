@@ -1,28 +1,67 @@
-// Foreground.jsx
-import React, { useRef, useState, useEffect } from "react";
+// Foreground Component
 import Card from "./Card";
 import Modal from "./Modal";
-
+import { useRef, useState, useEffect } from "react";
 function Foreground() {
   const ref = useRef(null);
-  const [ModalOpen, setOpenModal] = useState(false);
-  const [data, setData] = useState(() => {
-    const stored = localStorage.getItem("card-data");
-    return stored ? JSON.parse(stored) : [];
+  const [modalOpen, setModalOpen] = useState(false);
+  
+const [data, setData] = useState(() => {
+    try {
+      const stored = localStorage.getItem("notes-data");
+      if (stored) {
+        return JSON.parse(stored);
+      }
+    } catch (error) {
+      console.error("Error reading from localStorage:", error);
+    }
+    
+    // Default notes if nothing in localStorage
+    return [
+      {
+        id: "1",
+        title: "Welcome to Notes App",
+        content: "This is your first note! You can drag these cards around, delete them, and create new ones. Click the Create button to add your own notes.",
+        category: "Getting Started",
+        categoryColor: "blue",
+        date: new Date().toLocaleDateString('en-US', { 
+          year: 'numeric', 
+          month: 'short', 
+          day: 'numeric' 
+        })
+      },
+      {
+        id: "2",
+        title: "Shopping List",
+        content: "1. Milk\n2. Bread\n3. Eggs\n4. Butter\n5. Apples",
+        category: "Personal",
+        categoryColor: "green",
+        date: new Date().toLocaleDateString('en-US', { 
+          year: 'numeric', 
+          month: 'short', 
+          day: 'numeric' 
+        })
+      }
+    ];
   });
 
+  // Save to localStorage whenever data changes
   useEffect(() => {
-    localStorage.setItem("card-data", JSON.stringify(data));
+    try {
+      localStorage.setItem("notes-data", JSON.stringify(data));
+    } catch (error) {
+      console.error("Error saving to localStorage:", error);
+    }
   }, [data]);
 
-  const handleDelete = (id) => {
+   const handleDelete = (id) => {
     setData(prev => prev.filter(item => item.id !== id));
   };
 
   return (
     <div
       ref={ref}
-      className="fixed top-0 left-0 z-[3] w-full h-full flex gap-5 flex-wrap p-4 bg-zinc-900"
+      className="fixed top-0 left-0 z-[3] w-full h-full flex gap-5 flex-wrap p-4 overflow-auto"
     >
       {data.map((item) => (
         <Card
@@ -34,15 +73,15 @@ function Foreground() {
       ))}
 
       <button
-        className="absolute text-2xl bottom-0 right-0 m-3 text-white font-semibold bg-amber-600 rounded-full p-2 shadow-lg hover:bg-amber-700"
-        onClick={() => setOpenModal(prev => !prev)}
+        className="fixed text-2xl bottom-6 right-6 text-white font-semibold bg-amber-600 rounded-full p-4 shadow-lg hover:bg-amber-700 transition-colors z-10"
+        onClick={() => setModalOpen(prev => !prev)}
       >
-        {ModalOpen ? "Close" : "Create"}
+        {modalOpen ? "✕" : "+"}
       </button>
 
-      {ModalOpen && (
-        <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-[4]">
-          <Modal setData={setData} closeModal={() => setOpenModal(false)} />
+      {modalOpen && (
+        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-[4]">
+          <Modal setData={setData} closeModal={() => setModalOpen(false)} />
         </div>
       )}
     </div>
